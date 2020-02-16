@@ -4,9 +4,10 @@ from datetime import datetime
 from random import choice
 from traceback import format_exception
 
-from discord import Color, Embed
+from discord import Color, Embed, HTTPException
 from discord.ext.commands import (
     Bot,
+    CommandInvokeError,
     Context,
     DefaultHelpCommand,
     MissingRequiredArgument,
@@ -64,6 +65,12 @@ def setup(bot: Bot):
         if isinstance(exception, NotOwner):
             await ctx.send("Sorry, you're not allowed to use that one!")
             return
+
+        if (
+                isinstance(exception, CommandInvokeError)
+                and isinstance(exception.original, HTTPException)
+        ):
+            exception = exception.original
 
         tcb = ''.join(format_exception(
             type(exception),
