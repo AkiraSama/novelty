@@ -1,0 +1,21 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+flake8= "*"
+redis = "*"
+
+[packages]
+"discord.py" = "*"
+aiohttp = "*"
+aioredis = "*"
+toml = "*"
+
+[requires]
+python_version = "3.8"
+
+[scripts]
+bot = "python -m novelty"
+lint = "python -m flake8"

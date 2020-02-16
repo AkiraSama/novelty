@@ -1,0 +1,29 @@
+# General bot information.
+[bot]
+
+# The token provided by Discord for your Bot user.
+token = "REPLACE THIS WITH YOUR TOKEN"
+
+# The ID of the owner of the bot. If this is not provided, it will
+# default to the user that created the Discord application.
+# Novelty does not currently support discord.py owner teams.
+#owner_id = 0
+
+# The default prefix for novelty's commands.
+default_prefix = ";"
+
+# The directory from which to load novelty extensions.
+cogs_directory = "./cogs/"
+
+# Use ANSI color sequences for prettier logging. Recommended in
+# terminals with ANSI support.
+use_ansi_log_colors = false
+
+
+# Redis configuration info.
+[redis]
+host = "localhost"
+port = 6379
+#db = 0
+#password = ""
+#pool_size = 10
