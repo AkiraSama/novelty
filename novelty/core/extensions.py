@@ -52,8 +52,7 @@ class ExtensionCog(Cog, name=COG_NAME):
     async def ext_list(self, ctx: Context):
         """List all loaded extensions."""
 
-        paginator = Paginator(prefix='')
-        paginator.add_line("Extensions loaded: ```\n")
+        paginator = Paginator(prefix='```\n')
 
         for name in sorted(self.bot.extensions):
             paginator.add_line(name)
