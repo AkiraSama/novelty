@@ -17,15 +17,11 @@ from novelty import constants
 log = logging.getLogger(__name__)
 
 
-COG_NAME = "ExtensionManager"
+COG_NAME = "Extensions"
 
 
-class ExtensionManager(Cog):
-    """test 1"""
-
+class ExtensionCog(Cog, name=COG_NAME):
     def __init__(self, bot: Bot):
-        """test 2"""
-
         self.bot = bot
         self.ext_dir = Path(bot.novelty_config.get('bot', {}).get(
             'cogs_directory', constants.DEFAULT_COG_DIR,
@@ -39,21 +35,21 @@ class ExtensionManager(Cog):
                 try:
                     bot.load_extension(path)
                 except NoEntryPointError:
-                    log.info(f'Skipping over invalid extension "{path}".')
+                    log.info(f'Skipping over non-extension "{path}".')
 
     def _get_name(self, ext_name):
         return f'{self.ext_prefix}.{ext_name}'
 
-    @group(aliases=('ext',))
+    @group()
     @is_owner()
-    async def extension(self, ctx: Context):
+    async def ext(self, ctx: Context):
         """Manage extensions."""
 
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
 
-    @extension.command(name='list')
-    async def extension_list(self, ctx: Context):
+    @ext.command(name='list')
+    async def ext_list(self, ctx: Context):
         """List all loaded extensions."""
 
         paginator = Paginator(prefix='')
@@ -65,8 +61,8 @@ class ExtensionManager(Cog):
         for page in paginator.pages:
             await ctx.send(page)
 
-    @extension.command(name='load')
-    async def extension_load(self, ctx: Context, name: str):
+    @ext.command(name='load')
+    async def ext_load(self, ctx: Context, name: str):
         """Load an extension by name."""
 
         ext_name = self._get_name(name)
@@ -79,8 +75,8 @@ class ExtensionManager(Cog):
             log.info(f"Loaded extension {name}.")
             await ctx.send(f"Loaded extension `{name}`.")
 
-    @extension.command(name='unload')
-    async def extension_unload(self, ctx: Context, name: str):
+    @ext.command(name='unload')
+    async def ext_unload(self, ctx: Context, name: str):
         """Unload an extension by name."""
 
         ext_name = self._get_name(name)
@@ -93,8 +89,8 @@ class ExtensionManager(Cog):
         else:
             await ctx.send(f"Extension `{name}` is not loaded.")
 
-    @extension.command(name='reload')
-    async def extension_reload(self, ctx: Context, name: str):
+    @ext.command(name='reload')
+    async def ext_reload(self, ctx: Context, name: str):
         """Reload an extension by name."""
 
         ext_name = self._get_name(name)
@@ -110,4 +106,4 @@ class ExtensionManager(Cog):
 
 def setup(bot: Bot):
     log.info(f"Adding {COG_NAME} cog.")
-    bot.add_cog(ExtensionManager(bot))
+    bot.add_cog(ExtensionCog(bot))
