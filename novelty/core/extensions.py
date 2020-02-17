@@ -49,8 +49,11 @@ class ExtensionCog(Cog, name=COG_NAME):
                 log.info(f'Attempting to unload extension "{extension}".')
                 try:
                     self.bot.unload_extension(extension)
-                except Exception as e:
-                    log.error(e, exc_info=True)
+                except:  # noqa: E722
+                    log.exception(
+                        "Error while attempting to unload extension "
+                        f'"{extension}".'
+                    )
 
     def _get_name(self, ext_name):
         return f'{self.ext_prefix}.{ext_name}'
