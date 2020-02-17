@@ -16,10 +16,10 @@ class RanksCog(Cog, name=COG_NAME):
     class Keys:
         # SADD ranks:guilds <guild_id>
         TRACKED_GUILDS = 'ranks:guilds'
-        
+
         # ZADD ranks:<guild_id>:roles CH <xp_threshold> <role_id>
         GUILD_ROLES = 'ranks:{guild_id}:roles'
-        
+
         # ZADD ranks:<guild_id>:scores CH <xp> <user_id>
         GUILD_SCORES = 'ranks:{guild_id}:scores'
 
