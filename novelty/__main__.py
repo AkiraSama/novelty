@@ -69,13 +69,8 @@ def main(cfg, log):
         # Run bot.
         loop.run_until_complete(bot.start(token))
     except (KeyboardInterrupt, Exception) as e:  # noqa: E722
-        # Unload peripheral extensions.
-        for extension in tuple(bot.extensions):
-            if extension not in constants.CORE_EXTENSIONS:
-                bot.unload_extension(extension)
-
         # Unload core extensions.
-        for extension in constants.CORE_EXTENSIONS:
+        for extension in reversed(constants.CORE_EXTENSIONS):
             bot.unload_extension(extension)
 
         # Run logout.

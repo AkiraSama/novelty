@@ -28,6 +28,9 @@ class ExtensionCog(Cog, name=COG_NAME):
         ))
         self.ext_prefix = '.'.join(self.ext_dir.parts)
 
+        log.info(
+            f"Loading extensions from {self.ext_dir} ({self.ext_prefix})."
+        )
         for extension in self.ext_dir.iterdir():
             if extension.suffix == '.py':
                 path = '.'.join(extension.with_suffix('').parts)
@@ -36,6 +39,18 @@ class ExtensionCog(Cog, name=COG_NAME):
                     bot.load_extension(path)
                 except NoEntryPointError:
                     log.info(f'Skipping over non-extension "{path}".')
+
+    def cog_unload(self):
+        log.info(
+            f"Unloading extensions from {self.ext_dir} ({self.ext_prefix})."
+        )
+        for extension in tuple(self.bot.extensions):
+            if extension.startswith(self.ext_prefix):
+                log.info(f'Attempting to unload extension "{extension}".')
+                try:
+                    self.bot.unload_extension(extension)
+                except Exception as e:
+                    log.error(e, exc_info=True)
 
     def _get_name(self, ext_name):
         return f'{self.ext_prefix}.{ext_name}'
@@ -106,3 +121,8 @@ class ExtensionCog(Cog, name=COG_NAME):
 def setup(bot: Bot):
     log.info(f"Adding {COG_NAME} cog.")
     bot.add_cog(ExtensionCog(bot))
+
+
+def teardown(bot: Bot):
+    log.info(f"Removing {COG_NAME} cog.")
+    bot.remove_cog(COG_NAME)
