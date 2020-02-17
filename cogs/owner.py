@@ -79,3 +79,8 @@ class OwnerCog(Cog, name=COG_NAME):
 def setup(bot: Bot):
     log.info(f"Adding {COG_NAME} cog.")
     bot.add_cog(OwnerCog(bot))
+
+
+def teardown(bot: Bot):
+    log.info(f"Removing {COG_NAME} cog.")
+    bot.remove_cog(COG_NAME)
