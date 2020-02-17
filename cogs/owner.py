@@ -60,8 +60,6 @@ class OwnerCog(Cog, name=COG_NAME):
                 await ctx.send('\u200b')
                 return
 
-            print(out)
-
             for line in itertools.zip_longest(*(
                     [iter(out)] * self.MAX_LINE_SIZE
             )):
