@@ -25,12 +25,34 @@ class RanksCog(Cog, name=COG_NAME):
 
     def __init__(self, bot: Bot):
         self.bot = bot
+        self.redis = bot.redis_pool
 
     async def _init(self):
-        pass
+        tracked_guilds = set()
+        async for guild_id in self.redis.isscan(self.Keys.TRACKED_GUILDS):
+            tracked_guilds.add(int(guild_id))
+
+        for guild in self.bot.guilds:
+            
+            tracked_guilds.discard(guild.id)
+
+        for guild_id in tracked_guilds:
+            log.info(f'Clearing tracked information for guild "{guild_id}".')
+            await self.redis.delete(
+                self.Keys.GUILD_SCORES.format(guild_id=guild_id)
+            )
+            await self.redis.delete(
+                self.Keys.GUILD_ROLES.format(guild_id=guild_id)
+            )
+            await self.redis.srem(
+                self.Keys.TRACKED_GUILDS,
+                guild_id,
+            )
 
 
 async def _setup(bot: Bot):
+    await bot.wait_until_ready()
+
     cog = RanksCog(bot)
     await cog._init()
     log.info(f"Adding {COG_NAME} cog.")
@@ -38,8 +60,8 @@ async def _setup(bot: Bot):
 
 
 def setup(bot: Bot):
-    log.info("Running Ranks setup until complete.")
-    bot.loop.run_until_complete(_setup(bot))
+    log.info("Scheduling Ranks setup.")
+    bot.loop.create_task(_setup(bot))
 
 
 def teardown(bot: Bot):
