@@ -33,7 +33,7 @@ class RanksCog(Cog, name=COG_NAME):
             tracked_guilds.add(int(guild_id))
 
         for guild in self.bot.guilds:
-            
+
             tracked_guilds.discard(guild.id)
 
         for guild_id in tracked_guilds:
