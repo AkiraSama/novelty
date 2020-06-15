@@ -36,17 +36,19 @@ class AdmitCog(Cog, name=COG_NAME):
 
     @Cog.listener()
     async def on_member_join(self, member: Member):
-        min_age = self.age_thresholds.get(member.guild.id)
+        min_hours = self.age_thresholds.get(member.guild.id)
 
-        if not min_age:
+        if not min_hours:
             return
 
-        if (
-                (datetime.datetime.now() - member.created_at)
-                < datetime.timedelta(hours=min_age)
-        ):
+        member_hours = (
+            datetime.datetime.now() - member.created_at
+        ) // datetime.timedelta(hours=1)
+
+        if member_hours < min_hours:
             log.info(f"Rejecting user {member} due to inadequate "
-                     "account age.")
+                     f"account age. ({member_hours}h, server minimum"
+                     f"is {min_hours}h.)")
             try:
                 await member.send(REJECTION_MESSAGE.format(
                     guild_name=member.guild.name
@@ -54,7 +56,11 @@ class AdmitCog(Cog, name=COG_NAME):
             except Exception:  # Really don't care what happens.
                 log.exception(f"Failed to DM user {member}.")
             finally:
-                await member.kick()
+                await member.kick(
+                    reason=(f"Account age of {member_hours} hours "
+                            f"is insufficient to meet {min_hours} "
+                            "threshold.")
+                )
 
 
 async def _setup(bot: Bot):
