@@ -4,7 +4,7 @@ from datetime import datetime
 from random import choice
 from traceback import format_exception
 
-from discord import Color, Embed, HTTPException
+from discord import Color, Embed
 from discord.ext.commands import (
     Bot,
     CommandInvokeError,
