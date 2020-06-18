@@ -1,4 +1,3 @@
-import asyncio
 import logging
 import sys
 from datetime import datetime
@@ -56,10 +55,10 @@ def setup(bot: Bot):
     @bot.event
     async def on_command_error(ctx: Context, exception: Exception):
         if ctx.command is None:
-            #await ctx.send(
-            #    cmd_not_found(ctx.invoked_with),
-            #    delete_after=5,
-            #)
+            # await ctx.send(
+            #     cmd_not_found(ctx.invoked_with),
+            #     delete_after=5,
+            # )
             return
 
         if isinstance(exception, MissingRequiredArgument):
