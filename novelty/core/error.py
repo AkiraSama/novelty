@@ -69,10 +69,7 @@ def setup(bot: Bot):
             await ctx.send("Sorry, you're not allowed to use that one!")
             return
 
-        if (
-                isinstance(exception, CommandInvokeError)
-                and isinstance(exception.original, HTTPException)
-        ):
+        if isinstance(exception, CommandInvokeError):
             exception = exception.original
 
         tcb = ''.join(format_exception(
